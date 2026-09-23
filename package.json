@@ -1,0 +1,26 @@
+{
+  "name": "super-spouter",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "check": "npm run typecheck && npm test"
+  },
+  "dependencies": {
+    "aws4fetch": "1.0.20"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-pool-workers": "0.22.0",
+    "@cloudflare/workers-types": "5.20260917.1",
+    "typescript": "7.0.2",
+    "vitest": "4.1.0",
+    "wrangler": "4.134.0"
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}

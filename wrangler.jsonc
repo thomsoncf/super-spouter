@@ -1,0 +1,60 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "super-spouter",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-09-17",
+  "compatibility_flags": ["nodejs_compat"],
+  "limits": {
+    "cpu_ms": 300000
+  },
+  "vars": {
+    "CHECKPOINT_SHARDS": "64",
+    "LIST_PAGE_SIZE": "1000",
+    "MAX_ATTEMPTS": "8",
+    "MAX_SINGLE_PUT_BYTES": "536870912"
+  },
+  "r2_buckets": [
+    {
+      "binding": "SOURCE_BUCKET",
+      "bucket_name": "replace-with-source-bucket"
+    }
+  ],
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "JOBS",
+        "class_name": "JobCoordinator"
+      },
+      {
+        "name": "CHECKPOINTS",
+        "class_name": "CheckpointShard"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["JobCoordinator", "CheckpointShard"]
+    }
+  ],
+  "queues": {
+    "producers": [
+      {
+        "binding": "TRANSFER_QUEUE",
+        "queue": "super-spouter-transfers"
+      }
+    ],
+    "consumers": [
+      {
+        "queue": "super-spouter-transfers",
+        "max_batch_size": 1,
+        "max_batch_timeout": 1,
+        "max_retries": 8,
+        "dead_letter_queue": "super-spouter-transfers-dlq"
+      }
+    ]
+  },
+  "observability": {
+    "enabled": true
+  }
+}
